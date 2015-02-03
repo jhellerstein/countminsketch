@@ -37,10 +37,13 @@ if __name__ == "__main__":
 	import numpy
 	from collections import defaultdict
 
+	numsamples = 100000
+
+	print "Data sampled from Zipf distributions; reporting sqrt(MSE)"
+		
 	for exp in (3,2,1,0,-1):
-		print "Data sampled from Zipf distributions; reporting sqrt(MSE)"
-		print "Zipf alpha = " + str(1+10**(-1*exp))
 		d = defaultdict(int)
-		for i in numpy.random.zipf(1+10**(-1*exp), 100000):
+		for i in numpy.random.zipf(1+10**(-1*exp), numsamples):
 			d[i] += 1
+		print "Zipf alpha = " + str(1+10**(-1*exp)) + ", " + str(len(d)*100.0/numsamples) + "% distinct values"
 		sketch_em(d)
