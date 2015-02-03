@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import array
+import numpy
 
 
 class CountMinSketch(object):
@@ -75,6 +76,18 @@ class CountMinSketch(object):
         The returned value always overestimates the real value.
         """
         return min(table[i] for table, i in zip(self.tables, self._hash(x)))
+
+    def meanquery(self, x):
+        """
+        Return an estimation of the amount of times `x` has occured
+        using the Count Mean Min Sketch technique from Deng/Rafiei.
+        """
+        sketch_counters = [table[i] for table, i in zip(self.tables, self._hash(x))]
+        noise = [(1.0*(self.n - i))/(self.m - 1) for i in sketch_counters]
+        estimates = [(s-n) for s,n in zip(sketch_counters,noise)]
+        # import pdb; pdb.set_trace()
+        retval = numpy.median(estimates)
+        return retval if retval > 0 else 0
 
     def __getitem__(self, x):
         """
