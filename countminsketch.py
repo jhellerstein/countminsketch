@@ -85,7 +85,6 @@ class CountMinSketch(object):
         sketch_counters = [table[i] for table, i in zip(self.tables, self._hash(x))]
         noise = [(1.0*(self.n - i))/(self.m - 1) for i in sketch_counters]
         estimates = [(s-n) for s,n in zip(sketch_counters,noise)]
-        # import pdb; pdb.set_trace()
         retval = numpy.median(estimates)
         return retval if retval > 0 else 0
 
